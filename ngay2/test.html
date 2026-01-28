@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Bài Viết</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="main.js" defer></script>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --success-hover: #059669;
+            --warning-color: #f59e0b;
+            --warning-hover: #d97706;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        h3 {
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Card Style */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        /* Table Style */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f9fafb;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        input[type="button"],
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            font-family: inherit;
+            color: white;
+        }
+
+        /* Primary Button */
+        #btn_add,
+        #comments_section button {
+            background-color: var(--primary-color);
+        }
+
+        #btn_add:hover,
+        #comments_section button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Update Button */
+        #btn_update {
+            background-color: var(--warning-color);
+        }
+
+        #btn_update:hover {
+            background-color: var(--warning-hover);
+        }
+
+        /* Cancel Button */
+        #btn_cancel {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        #btn_cancel:hover {
+            background-color: #475569;
+        }
+
+        /* Table Action Buttons */
+        input[value="Xóa"],
+        button[onclick*="Delete"] {
+            background-color: var(--danger-color);
+        }
+
+        input[value="Xóa"]:hover,
+        button[onclick*="Delete"]:hover {
+            background-color: var(--danger-hover);
+        }
+
+        input[value="Sửa"],
+        button[onclick*="Edit"] {
+            background-color: var(--warning-color);
+        }
+
+        input[value="Sửa"]:hover,
+        button[onclick*="Edit"]:hover {
+            background-color: var(--warning-hover);
+        }
+
+        input[value="Bình Luận"] {
+            background-color: var(--success-color);
+        }
+
+        input[value="Bình Luận"]:hover {
+            background-color: var(--success-hover);
+        }
+
+        /* Comments Section */
+        #comments_section {
+            display: block;
+            /* Managed via Layout, potentially hidden if empty logic added later */
+            border-top: 4px solid var(--success-color);
+        }
+
+        .comment-actions button {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Post Management Form Card (Top) -->
+        <div class="card" style="margin-bottom: 24px;">
+            <h3>Quản Lý Bài Viết</h3>
+            <input type="hidden" id="id_txt" />
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label for="title_txt">Tiêu Đề</label>
+                    <input type="text" id="title_txt" placeholder="Nhập tiêu đề bài viết..." />
+                </div>
+                <div class="form-group">
+                    <label for="view_txt">Lượt Xem</label>
+                    <input type="text" id="view_txt" placeholder="0" />
+                </div>
+            </div>
+            <div>
+                <input type="button" id="btn_add" value="Thêm Bài Viết" onclick="CreatePost()">
+                <input type="button" id="btn_update" value="Cập Nhật" onclick="UpdatePost()" style="display:none;">
+                <input type="button" id="btn_cancel" value="Hủy" onclick="ResetForm()" style="display:none;">
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Post List Card (Left) -->
+            <div class="card">
+                <h3>Danh Sách Bài Viết</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">ID</th>
+                                <th>Tiêu Đề</th>
+                                <th style="width: 80px;">Lượt Xem</th>
+                                <th style="width: 200px;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="body_table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Comments Section Card (Right) -->
+            <div id="comments_section" class="card">
+                <h3>Bình Luận</h3>
+                <p id="comment_helper" style="color: var(--text-muted); font-style: italic;">Chọn "Bình Luận" ở danh
+                    sách để xem.</p>
+                <input type="hidden" id="current_post_id">
+                <input type="hidden" id="comment_id">
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">ID</th>
+                                <th>Nội Dung</th>
+                                <th style="width: 100px;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comments_body"></tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 15px;">
+                    <div class="form-group">
+                        <label for="comment_text">Thêm/Sửa Bình Luận</label>
+                        <textarea id="comment_text" placeholder="Nhập bình luận..."></textarea>
+                    </div>
+                    <button onclick="SaveComment()">Lưu Bình Luận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
